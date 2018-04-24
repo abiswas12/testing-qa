@@ -5,6 +5,7 @@ import java.io.File;
 public enum Constants {
     URLTODEMO ("http://thedemosite.co.uk/index.php"),
     URLTOQA   ("http://www.qa.com"),
+    URLTOMOUSEDEMO  ("http://demoqa.com/"),
     PATHTO   (System.getProperty("user.dir") + File.separatorChar),
     REPORT   ("Report"+".html"),
     EXCEL   ("Book1"+".xlsx");
