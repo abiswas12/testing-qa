@@ -4,19 +4,26 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import com.google.common.base.Function;
 import org.junit.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import utils.Constants;
 import utils.SpreadSheetReader;
+import utils.WebDriverFactory;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MyFirstTest {
 
     WebDriver browser;
     private static ExtentReports report;
+    private Wait<WebDriver> wait;
 
     @BeforeClass
     public static void init() {
@@ -26,7 +33,14 @@ public class MyFirstTest {
 
     @Before
     public void setUp(){
-        browser = new ChromeDriver();
+         browser = WebDriverFactory.getWebDriver("chrome");
+//        FirefoxOptions capabilities = new FirefoxOptions();
+//        capabilities.setCapability("marionette", true);
+//        browser = new FirefoxDriver(capabilities);
+        wait = new FluentWait<WebDriver>(browser)
+                .withTimeout(30, TimeUnit.SECONDS)
+                .pollingEvery(3, TimeUnit.SECONDS)
+                .ignoring(NoSuchElementException.class);
     }
 
     @After
@@ -49,9 +63,19 @@ public class MyFirstTest {
             List<String> row = sheetReader.readRow(i, "Sheet1");
 
             browser.navigate().to(Constants.URLTODEMO.getStuff());
+            wait.until(new Function<WebDriver, WebElement>() {
+                public WebElement apply(WebDriver driver) {
+                    return driver.findElement(By.xpath("/html/body/div/center/table/tbody/tr[2]/td/div/center/table/tbody/tr/td[2]/p/small/a[3]"));
+                }
+            });
             test.log(Status.INFO, "At the Website");
 
             browser.findElement(By.xpath("/html/body/div/center/table/tbody/tr[2]/td/div/center/table/tbody/tr/td[2]/p/small/a[3]")).click();
+            wait.until(new Function<WebDriver, WebElement>() {
+                public WebElement apply(WebDriver driver) {
+                    return driver.findElement(By.cssSelector("id"));
+                }
+            });
             test.log(Status.INFO, "At the addUser page");
 
             browser.findElement(By.name("username")).sendKeys(row.get(0));
@@ -61,6 +85,11 @@ public class MyFirstTest {
             browser.findElement(By.xpath("/html/body/table/tbody/tr/td[1]/form/div/center/table/tbody/tr/td[1]/div/center/table/tbody/tr[3]/td[2]/p/input")).click();
 
             browser.findElement(By.xpath("/html/body/div/center/table/tbody/tr[2]/td/div/center/table/tbody/tr/td[2]/p/small/a[4]")).click();
+            wait.until(new Function<WebDriver, WebElement>() {
+                public WebElement apply(WebDriver driver) {
+                    return driver.findElement(By.cssSelector("id"));
+                }
+            });
             test.log(Status.INFO, "At the login page");
 
             browser.findElement(By.name("username")).sendKeys(row.get(0));
