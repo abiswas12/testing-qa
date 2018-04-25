@@ -109,7 +109,7 @@ public class MouseDemoQA {
     }
 
     @Test
-    public void Droppable(){
+    public void Droppable(){ // In progress
         ExtentTest test = report.createTest("MyDroppableTab");
 
         test.log(Status.INFO, "At the Website");
