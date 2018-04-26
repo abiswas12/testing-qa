@@ -19,7 +19,8 @@ public class Cookies {
         this.url=url;
     }
 
-    public  void createCookie() {
+    public void createCookie() {
+        if(url.equals(null)) { System.err.println("You need to instantiate with a variable");}
 
         File f;
         BufferedWriter buf = null;

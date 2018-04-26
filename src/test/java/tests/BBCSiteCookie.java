@@ -12,11 +12,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import utils.Constants;
 import utils.Cookies;
 
-public class bbcSiteCookie {
+public class BBCSiteCookie {
     String url;
     WebDriver driver;
     ExtentReports report;
     ExtentTest test;
+    Cookies bbcCookie;
 
     @Before
     public void setup() {
@@ -38,18 +39,20 @@ public class bbcSiteCookie {
     public void teardown() throws InterruptedException {
         Thread.sleep(3000);
         driver.quit();
+        report.flush();
     }
 
     @Test
     public void cookieTest() {
+        bbcCookie = new Cookies(driver,url);
 
         login();
-        Cookies.createCookie(driver,url);
+        bbcCookie.createCookie();
         logout();
 
         driver.get("https://www.google.co.uk/");
 
-        loadCookie();
+        bbcCookie.loadCookie();
     }
 
     public void login() {
@@ -68,11 +71,10 @@ public class bbcSiteCookie {
         test.log(Status.INFO, "Attempted to login");
 
         checkLogin();
-        report.flush();
     }
 
     public void logout() {
-        test = report.createTest("Verify logout");
+        test.log(Status.INFO,"Verify logout");
 
         driver.findElement(By.id("idcta-link")).click();
         driver.findElement(By.cssSelector("#orb-modules > div.___iso-html___ > div > div > "
@@ -82,8 +84,6 @@ public class bbcSiteCookie {
         test.log(Status.INFO, "Attempted to logout");
 
         checkLogout();
-
-        report.endTest(test);
         report.flush();
     }
     public void checkLogin() {
@@ -94,9 +94,9 @@ public class bbcSiteCookie {
         String bodyText = driver.findElement(By.tagName("body")).getText();
 
         if (bodyText.contains("Your account")) {
-            test.log(LogStatus.PASS, "Login valid");
+            test.log(Status.PASS, "Login valid");
         } else {
-            test.log(LogStatus.FAIL, "Login failed");
+            test.log(Status.FAIL, "Login failed");
         }
     }
 
@@ -105,9 +105,9 @@ public class bbcSiteCookie {
         String check = driver.findElement(By.id("idcta-username")).getText();
 
         if (check.equalsIgnoreCase("Sign in")) {
-            test.log(LogStatus.PASS, "Login valid");
+            test.log(Status.PASS, "Login valid");
         } else {
-            test.log(LogStatus.FAIL, "Login failed");
+            test.log(Status.FAIL, "Login failed");
         }
     }
 }
