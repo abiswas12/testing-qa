@@ -37,10 +37,9 @@ public class PHPTravelsdef {
         // Write code here that turns the phrase above into concrete actions
         search = PageFactory.initElements(browser,PHPHomePage.class);
 
-        search.setSearchBox("London");
         search.setNoOfAdults(arg0);
         search.setSearchEndDate("26/04/2018");
-        Thread.sleep(1000);
+        search.setSearchBox("London");
     }
 
     @Then("^I am on the correct page if and only if the url is correct$")
